@@ -14,6 +14,14 @@
     "koishi",
     "plugin"
   ],
+  "contributors": [
+    "Mitpoppy <2974560682@qq.com>"
+  ],
+  "homepage": "https://github.com/Mitpoppy/koishi-plugin-rw-ip",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mitpoppy/koishi-plugin-rw"
+  },
   "peerDependencies": {
     "koishi": "4.17.1"
   }
