@@ -1,0 +1,20 @@
+{
+  "name": "koishi-plugin-rw-ip",
+  "description": "用于查询铁锈战争游戏服务IP版同之前发布的",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "chatbot",
+    "koishi",
+    "plugin"
+  ],
+  "peerDependencies": {
+    "koishi": "4.17.1"
+  }
+}
