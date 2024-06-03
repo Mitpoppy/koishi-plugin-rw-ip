@@ -11,27 +11,27 @@ export function apply(ctx: Context) {
       for (const match of matches) {
         try {
           const apiUrl = `http://api.der.kim:8080/api/get/rwping?ip=${match}`
-          const response = await ctx.http.get(apiUrl)
+          const response = await ctx.http.get(apiUrl, { timeout: 10000 })
 
-          const responseData = response.data
-          if (responseData.Result) {
-            const decodedResult = Buffer.from(responseData.Result, 'base64').toString('utf8')
-            const decodedContent = JSON.parse(decodedResult)
-            let mapName = decodedContent['MapName'] || '未知地图'
-            const gameName = decodedContent['AutoGameName'] || '铁锈-未知版本'
-            const multiplier = decodedContent['Income'] || 1.0
-            const noNukes = decodedContent['NoNukes'] || false
-            const mist = decodedContent['Mist'] || '未知迷雾'
-            const initUnit = decodedContent['InitUnit'] || '未知单位'
-            const playerCount = `${(decodedContent['PlayerCount'] || 0) - 1}/10`
-            const delay = `${decodedContent['PrPing'] || 0}/${decodedContent['ConnectPing'] || 0} 毫秒`
-            const mod = decodedContent['UnitData'] || '默认'
+          const data = JSON.parse(Buffer.from(response).toString('utf-8')) // 将ArrayBuffer转换为字符串并解析为JSON对象
+          
+          if (data.State === 0) {
+            const decodedResult = JSON.parse(Buffer.from(data.Result, 'base64').toString('utf8'));
+            let mapName = decodedResult.MapName || '未知地图';
+            const gameName = decodedResult['AutoGameName'] || '铁锈-未知版本'
+            const multiplier = decodedResult['Income'] || 1.0
+            const noNukes = decodedResult['NoNukes'] || false
+            const mist = decodedResult['Mist'] || '未知迷雾'
+            const initUnit = decodedResult['InitUnit'] || '未知单位'
+            const playerCount = `${(decodedResult['PlayerCount'] || 0) - 1}/10`
+            const delay = `${decodedResult['PrPing'] || 0}/${decodedResult['ConnectPing'] || 0} 毫秒`
+            const mod = decodedResult['UnitData'] || '默认'
             const id = match
             const gameVersion = '未知版本'
             const replyMessage = `自动识别: ${gameName}\n地图名称: ${mapName}\n倍率: ${multiplier}\n禁核: ${noNukes}\n迷雾: ${mist}\n默认单位: ${initUnit}\n人数: ${playerCount}\n延迟/内部处理时间: ${delay}\n使用Mod: ${mod}\nID: ${id}\n游戏版本: ${gameVersion}`
             session.send(replyMessage)
           } else {
-            console.error('API响应中缺少Result字段:', responseData)
+            console.error('API响应中出现错误:', data)
           }
         } catch (error) {
           console.error('获取或解析 API 数据时出错:', error)
